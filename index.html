@@ -1,406 +1,334 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mason Quote Dashboard</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mason Quote Dashboard</title>
+    <link rel="icon" type="image/png" href="./mason-submark.png" />
+    <style>
+      :root {
+        --bg: #eef3ff;
+        --panel: #ffffff;
+        --text: #14213a;
+        --muted: #d8def0;
+        --border: rgba(255, 255, 255, 0.16);
+        --black: #0b1320;
+        --indigo: #5b52d6;
+        --shadow: 0 12px 28px rgba(9, 17, 30, 0.18);
+      }
 
-  <!--
-    Mason Quote Dashboard - GitHub Pages Wrapper
+      * { box-sizing: border-box; }
 
-    Setup:
-    1. Rename this file from index_github_wrapper_v1.txt to index.html.
-    2. Replace APPS_SCRIPT_DASHBOARD_URL below with your deployed Apps Script dashboard URL.
-       Recommended format:
-       https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec?page=dashboard
-    3. Add your Mason submark image to the same GitHub repository folder as this index.html file.
-       Recommended file name: mason-submark.png
-    4. If your submark file has a different name, update both favicon lines below.
-  -->
-
-  <!-- Mason submark browser tab icon -->
-  <link rel="icon" type="image/png" href="./mason-submark.png" />
-  <link rel="apple-touch-icon" href="./mason-submark.png" />
-
-  <style>
-    :root {
-      --mason-black: #0b1320;
-      --mason-indigo: #453bb4;
-      --mason-blue: #3d6daf;
-      --mason-border: #dbe2ea;
-      --mason-bg: #eef3ff;
-      --mason-text: #14213a;
-      --mason-muted: #5f6f86;
-      --mason-white: #ffffff;
-      --shadow: 0 14px 34px rgba(20, 33, 58, 0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(86, 184, 255, 0.18), transparent 28%),
-        radial-gradient(circle at top right, rgba(255, 113, 184, 0.12), transparent 24%),
-        linear-gradient(180deg, #f4f7ff 0%, var(--mason-bg) 100%);
-      color: var(--mason-text);
-      overflow: hidden;
-    }
-
-    .app-shell {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      grid-template-rows: auto 1fr;
-    }
-
-    .topbar {
-      min-height: 72px;
-      padding: 14px 22px;
-      background: linear-gradient(90deg, #09111e 0%, #0b1b44 52%, #3f31bb 100%);
-      color: var(--mason-white);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      box-shadow: 0 12px 28px rgba(9, 17, 30, 0.18);
-      z-index: 2;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex: 0 0 auto;
-    }
-
-    .brand-mark img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      padding: 5px;
-    }
-
-    .brand-title {
-      min-width: 0;
-    }
-
-    .brand-title h1 {
-      margin: 0;
-      font-size: 21px;
-      line-height: 1.15;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .brand-title p {
-      margin: 4px 0 0;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.76);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 0 0 auto;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 11px 15px;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.16s ease, filter 0.16s ease, opacity 0.16s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      white-space: nowrap;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-    }
-
-    .btn-light {
-      background: rgba(255, 255, 255, 0.92);
-      color: #13203b;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #6154ec 0%, #4433d1 100%);
-      color: #ffffff;
-      box-shadow: 0 10px 20px rgba(91, 82, 214, 0.18);
-    }
-
-    .frame-wrap {
-      position: relative;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .dashboard-frame {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: #ffffff;
-    }
-
-    .loader {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top left, rgba(86, 184, 255, 0.18), transparent 24%),
-        radial-gradient(circle at top right, rgba(255, 113, 184, 0.16), transparent 22%),
-        linear-gradient(180deg, rgba(244, 247, 255, 0.98) 0%, rgba(238, 243, 255, 0.98) 100%);
-      transition: opacity 0.28s ease, visibility 0.28s ease;
-      z-index: 1;
-    }
-
-    .loader.hide {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .loader-card {
-      width: min(420px, 100%);
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(219, 226, 234, 0.9);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 28px;
-      text-align: center;
-    }
-
-    .spinner {
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 18px;
-      border-radius: 50%;
-      border: 5px solid rgba(91, 82, 214, 0.16);
-      border-top-color: var(--mason-indigo);
-      animation: spin 0.85s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loader-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .loader-sub {
-      color: var(--mason-muted);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .fallback {
-      position: absolute;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%);
-      width: min(640px, calc(100% - 32px));
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid var(--mason-border);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      padding: 14px 16px;
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      z-index: 3;
-    }
-
-    .fallback.show {
-      display: flex;
-    }
-
-    .fallback-text {
-      color: var(--mason-muted);
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
-    .fallback-text strong {
-      display: block;
-      color: var(--mason-text);
-      font-size: 14px;
-      margin-bottom: 2px;
-    }
-
-    @media (max-width: 760px) {
+      html,
       body {
-        overflow: auto;
+        height: 100%;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow: hidden;
       }
 
       .app-shell {
-        min-height: 100vh;
         height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg);
       }
 
       .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+        min-height: 74px;
+        background: linear-gradient(90deg, #09111e 0%, #0b1b44 52%, #3f31bb 100%);
+        color: #ffffff;
+        padding: 14px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        box-shadow: var(--shadow);
+        z-index: 10;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex: 0 0 auto;
+      }
+
+      .brand-mark img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 21px;
+        line-height: 1.15;
+        font-weight: 800;
+      }
+
+      .brand p {
+        margin: 4px 0 0;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 13px;
+        line-height: 1.35;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .top-actions {
-        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
       }
 
-      .top-actions .btn {
+      .btn {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+
+      .btn:hover { transform: translateY(-1px); filter: brightness(1.02); }
+      .btn-light { background: #ffffff; color: #14213a; }
+      .btn-primary { background: var(--indigo); color: #ffffff; }
+
+      .frame-wrap {
+        position: relative;
         flex: 1 1 auto;
+        min-height: 0;
+        background: var(--bg);
       }
 
-      .brand-title h1,
-      .brand-title p {
-        white-space: normal;
+      iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: var(--bg);
       }
 
-      .fallback {
-        align-items: stretch;
-        flex-direction: column;
+      .loading {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, #f4f7ff 0%, #eef3ff 100%);
+        z-index: 2;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <img src="./mason-submark.png" alt="" />
+
+      .loading.hide {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .loader-card {
+        width: min(420px, calc(100% - 40px));
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid #dbe2ea;
+        border-radius: 22px;
+        box-shadow: 0 20px 60px rgba(20, 33, 58, 0.16);
+        padding: 28px;
+        text-align: center;
+      }
+
+      .spinner {
+        width: 52px;
+        height: 52px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        border: 5px solid rgba(91, 82, 214, 0.16);
+        border-top-color: var(--indigo);
+        animation: spin 0.85s linear infinite;
+      }
+
+      .loader-title {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+
+      .loader-sub {
+        color: #5f6f86;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .fallback-card {
+        position: absolute;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%);
+        z-index: 3;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid #dbe2ea;
+        border-radius: 16px;
+        box-shadow: 0 12px 28px rgba(20, 33, 58, 0.14);
+        padding: 12px 14px;
+        display: none;
+        align-items: center;
+        gap: 14px;
+        max-width: calc(100% - 40px);
+      }
+
+      .fallback-card.show { display: flex; }
+      .fallback-title { font-size: 13px; font-weight: 800; }
+      .fallback-sub { margin-top: 3px; color: #5f6f86; font-size: 12px; white-space: nowrap; }
+      .fallback-card .btn { padding: 10px 14px; white-space: nowrap; }
+
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      @media (max-width: 720px) {
+        html, body { overflow: auto; }
+        .app-shell { min-height: 100vh; height: auto; }
+        .topbar { align-items: flex-start; flex-direction: column; }
+        .top-actions { width: 100%; }
+        .top-actions .btn { flex: 1; }
+        .brand p { white-space: normal; }
+        .frame-wrap { height: calc(100vh - 142px); min-height: 640px; }
+        .fallback-card { left: 14px; right: 14px; transform: none; flex-direction: column; align-items: stretch; }
+        .fallback-sub { white-space: normal; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">
+            <img src="./mason-submark.png" alt="Mason submark" />
+          </div>
+          <div>
+            <h1>Mason Quote Dashboard</h1>
+            <p>Professional team workspace for draft quotes, approvals, revisions, customer send, and close outcomes.</p>
+          </div>
         </div>
-        <div class="brand-title">
-          <h1>Mason Quote Dashboard</h1>
-          <p>Professional team workspace for draft quotes, approvals, revisions, customer send, and close outcomes.</p>
+        <div class="top-actions">
+          <a class="btn btn-light" id="openNewTabBtn" href="#" target="_blank" rel="noopener">Open in New Tab</a>
+          <button class="btn btn-primary" type="button" id="reloadBtn">Reload Dashboard</button>
         </div>
-      </div>
-      <nav class="top-actions" aria-label="Dashboard actions">
-        <a class="btn btn-light" id="openDashboardLink" href="#" target="_blank" rel="noopener">Open in New Tab</a>
-        <button class="btn btn-primary" type="button" id="reloadButton">Reload Dashboard</button>
-      </nav>
-    </header>
+      </header>
 
-    <main class="frame-wrap">
-      <iframe
-        id="dashboardFrame"
-        class="dashboard-frame"
-        title="Mason Quote Dashboard"
-        src="APPS_SCRIPT_DASHBOARD_URL"
-        allow="clipboard-read; clipboard-write"
-      ></iframe>
-
-      <div class="loader" id="loader">
-        <div class="loader-card">
-          <div class="spinner" aria-hidden="true"></div>
-          <div class="loader-title">Loading Mason Quote Dashboard</div>
-          <div class="loader-sub">Opening the secure Apps Script dashboard workspace inside this GitHub Pages wrapper.</div>
+      <main class="frame-wrap">
+        <div class="loading" id="loadingOverlay">
+          <div class="loader-card">
+            <div class="spinner"></div>
+            <div class="loader-title">Loading Mason Quote Dashboard</div>
+            <div class="loader-sub">Opening the secure Apps Script dashboard inside the Mason wrapper.</div>
+          </div>
         </div>
-      </div>
 
-      <div class="fallback" id="fallbackBox">
-        <div class="fallback-text">
-          <strong>Dashboard taking longer than expected?</strong>
-          Open the Apps Script dashboard directly in a new tab.
+        <iframe id="dashboardFrame" title="Mason Quote Dashboard" allow="clipboard-write"></iframe>
+
+        <div class="fallback-card" id="fallbackCard">
+          <div>
+            <div class="fallback-title">Dashboard taking longer than expected?</div>
+            <div class="fallback-sub">Open the Apps Script dashboard directly in a new tab.</div>
+          </div>
+          <a class="btn btn-primary" id="fallbackOpenBtn" href="#" target="_blank" rel="noopener">Open Dashboard</a>
         </div>
-        <a class="btn btn-primary" id="fallbackOpenLink" href="#" target="_blank" rel="noopener">Open Dashboard</a>
-      </div>
-    </main>
-  </div>
+      </main>
+    </div>
 
-  <script>
-    const DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycbwoxry9x0RutwVuVA9fRZBEavBF3DHS1KfpaS6TVZv9rNJl3L15exPi6eq9dE7H_c4I/exec';
+    <script>
+      // Replace this placeholder with your deployed Apps Script dashboard URL.
+      // Example: https://script.google.com/macros/s/AKfycbxxxxxxxxxxxx/exec?page=dashboard
+      const DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycbwoxry9x0RutwVuVA9fRZBEavBF3DHS1KfpaS6TVZv9rNJl3L15exPi6eq9dE7H_c4I/exec';
 
-    const dashboardFrame = document.getElementById('dashboardFrame');
-    const loader = document.getElementById('loader');
-    const fallbackBox = document.getElementById('fallbackBox');
-    const openDashboardLink = document.getElementById('openDashboardLink');
-    const fallbackOpenLink = document.getElementById('fallbackOpenLink');
-    const reloadButton = document.getElementById('reloadButton');
+      const frame = document.getElementById('dashboardFrame');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const fallbackCard = document.getElementById('fallbackCard');
+      const openNewTabBtn = document.getElementById('openNewTabBtn');
+      const fallbackOpenBtn = document.getElementById('fallbackOpenBtn');
+      const reloadBtn = document.getElementById('reloadBtn');
 
-    function isConfiguredUrl(url) {
-      return url && url !== 'APPS_SCRIPT_DASHBOARD_URL' && /^https?:\/\//i.test(url);
-    }
+      function buildDashboardUrl() {
+        const url = new URL(DASHBOARD_URL, window.location.href);
+        url.searchParams.set('page', url.searchParams.get('page') || 'dashboard');
+        url.searchParams.set('embedded', 'true');
+        return url.toString();
+      }
 
-    function showConfigurationWarning() {
-      loader.innerHTML = [
-        '<div class="loader-card">',
-        '  <div class="loader-title">Dashboard URL Needed</div>',
-        '  <div class="loader-sub">Replace APPS_SCRIPT_DASHBOARD_URL in this index.html file with your deployed Apps Script dashboard URL.</div>',
-        '</div>'
-      ].join('');
-      fallbackBox.classList.remove('show');
-    }
+      function hideEmbeddedDashboardTopbar() {
+        try {
+          const iframeDoc = frame.contentDocument || frame.contentWindow.document;
+          if (!iframeDoc || !iframeDoc.head) return;
 
-    function setLinks(url) {
-      openDashboardLink.href = url;
-      fallbackOpenLink.href = url;
-    }
+          if (iframeDoc.getElementById('mason-wrapper-embedded-style')) return;
 
-    if (!isConfiguredUrl(DASHBOARD_URL)) {
-      showConfigurationWarning();
-    } else {
-      setLinks(DASHBOARD_URL);
-      dashboardFrame.src = DASHBOARD_URL;
+          const style = iframeDoc.createElement('style');
+          style.id = 'mason-wrapper-embedded-style';
+          style.innerHTML = `
+            .topbar {
+              display: none !important;
+            }
 
-      dashboardFrame.addEventListener('load', function () {
-        window.setTimeout(function () {
-          loader.classList.add('hide');
-        }, 350);
-      });
+            .shell {
+              margin-top: 22px !important;
+            }
 
-      window.setTimeout(function () {
-        fallbackBox.classList.add('show');
-      }, 9000);
+            body {
+              overflow-x: hidden !important;
+            }
+          `;
+          iframeDoc.head.appendChild(style);
+        } catch (err) {
+          console.log('Embedded dashboard header could not be hidden by wrapper CSS:', err);
+        }
+      }
 
-      reloadButton.addEventListener('click', function () {
-        loader.classList.remove('hide');
-        fallbackBox.classList.remove('show');
-        dashboardFrame.src = DASHBOARD_URL + (DASHBOARD_URL.indexOf('?') === -1 ? '?' : '&') + 'wrapperReload=' + Date.now();
-        window.setTimeout(function () {
-          fallbackBox.classList.add('show');
+      function loadDashboard() {
+        const dashboardUrl = buildDashboardUrl();
+        openNewTabBtn.href = dashboardUrl;
+        fallbackOpenBtn.href = dashboardUrl;
+        loadingOverlay.classList.remove('hide');
+        fallbackCard.classList.remove('show');
+        frame.src = dashboardUrl;
+
+        window.clearTimeout(window.__fallbackTimer);
+        window.__fallbackTimer = window.setTimeout(() => {
+          fallbackCard.classList.add('show');
         }, 9000);
+      }
+
+      frame.addEventListener('load', () => {
+        hideEmbeddedDashboardTopbar();
+        window.setTimeout(hideEmbeddedDashboardTopbar, 250);
+        window.setTimeout(hideEmbeddedDashboardTopbar, 1000);
+        loadingOverlay.classList.add('hide');
       });
-    }
-  </script>
-</body>
+
+      reloadBtn.addEventListener('click', loadDashboard);
+
+      loadDashboard();
+    </script>
+  </body>
 </html>
